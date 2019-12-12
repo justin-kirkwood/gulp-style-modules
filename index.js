@@ -27,16 +27,20 @@ module.exports = function(opts) {
         var moduleId = typeof modid === 'function' ? modid(file) : modid;
         var dirname = path.dirname(file.path);
 
-        var res = '<dom-module id="' + moduleId + '">\n' +
-            '<template>\n' +
-            '<style>\n' +
-            file.contents.toString('utf8') + '\n' +
-            '</style>\n' +
-            '</template>\n' +
-            '</dom-module>';
+        var res = `const $_documentContainer = document.createElement('template')
+          $_documentContainer.innerHTML = \`<dom-module id="${moduleId}">
+            <template>
+              <style>
+                ${file.contents.toString('utf8')}
+              </style>
+            </template>
+          </dom-module>\`
+
+          document.head.appendChild($_documentContainer); 
+        `;
 
         file.contents = new Buffer(res);
-        file.path = path.join(dirname, filename) + '.html';
+        file.path = path.join(dirname, filename) + '.js';
 
         return cb(null, file);
     });
