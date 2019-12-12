@@ -27,15 +27,15 @@ module.exports = function(opts) {
         var moduleId = typeof modid === 'function' ? modid(file) : modid;
         var dirname = path.dirname(file.path);
 
-        var res = 'const $_documentContainer = document.createElement("template")\n\n' +
+        var res = 'const $_documentContainer = document.createElement("template");\n\n' +
           '$_documentContainer.innerHTML = `<dom-module id="' + moduleId + '">\n' +
           '\t<template>\n' +
           '\t\t<style>\n' +
           '\t\t\t' + file.contents.toString('utf8') + '\n' +
           '\t\t</style>\n' +
           '\t</template>\n' +
-          '</dom-module>`\n' +
-          'document.head.appendChild($_documentContainer);\n';
+          '</dom-module>`;\n\n' +
+          'document.head.appendChild($_documentContainer);';
 
         file.contents = new Buffer(res);
         file.path = path.join(dirname, filename) + '.js';
